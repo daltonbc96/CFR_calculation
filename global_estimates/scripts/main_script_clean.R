@@ -1,3 +1,16 @@
+#Packages
+
+remotes::install_github("epiforecasts/NCoVUtils", dependencies = TRUE, force = TRUE)
+
+devtools::install_github("tidyverse/dplyr")
+
+install.packages("tidyverse", dependencies = T)
+library(tidyverse)
+
+install.packages("dplyr", dependencies = T)
+library(dplyr)
+
+
 zmeanHDT <- 13
 zsdHDT <- 12.7
 zmedianHDT <- 9.1
@@ -5,7 +18,7 @@ muHDT <- log(zmedianHDT)
 sigmaHDT <- sqrt(2*(log(zmeanHDT) - muHDT))
 cCFRBaseline <- 1.38
 cCFREstimateRange <- c(1.23, 1.53)
-#cCFRIQRRange <- c(1.3, 1.4)
+cCFRIQRRange <- c(1.3, 1.4)
 
 
 
@@ -37,6 +50,12 @@ scale_cfr <- function(data_1_in, delay_fun){
 }
 # Get data
 allDat <- NCoVUtils::get_ecdc_cases()
+
+#Quando executar esse comando pode haver um erro em um arquivo importado chamado "COVID-19-geographic-disbtribution-worldwide-2020-03 ...xlsx,
+#Você pode baixar ele manualmente colocar no endereço indicado, para pegar o novo arquivo execute o arquivo "COVID-19 disbtribution"
+#o arquivo estara na pasta scripts, #Não se esqueça de nomear o arquivo com a data de hoje ou data que aparece no erro.
+
+
 allDatDesc <- allDat %>% 
   dplyr::arrange(country, date) %>% 
   dplyr::mutate(date = lubridate::ymd(date)) %>% 
@@ -93,4 +112,7 @@ reportDataFinal <- allTogetherClean2 %>%
   dplyr::mutate(underreporting_estimate_clean = paste0(underreporting_estimate*100,
                                                 "% (",lower*100,"% - ",upper*100,"%)"))
 
-saveRDS(reportDataFinal, "data/all_together_clean.rds")
+
+#saveRDS(reportDataFinal, "C:\\CFR_calculation\\global_estimates\\data\\all_together_clean.rds")
+
+write.csv(reportDataFinal, file = "relatorio final.csv")
